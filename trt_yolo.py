@@ -4,7 +4,7 @@ This script demonstrates how to do real-time object detection with
 TensorRT optimized YOLO engine.
 """
 
-
+import datetime
 import os
 import time
 import argparse
@@ -64,6 +64,7 @@ def loop_and_detect(cam, trt_yolo, conf_th, vis):
         img = vis.draw_bboxes(img, boxes, confs, clss)
         img = show_fps(img, fps)
         # cv2.imshow(WINDOW_NAME, img)
+        print(f"{datetime.datetime.now().isoformat()} fps={fps}", flush=True)
         cv2.imwrite("output.jpg", img)
         toc = time.time()
         curr_fps = 1.0 / (toc - tic)
@@ -79,6 +80,7 @@ def loop_and_detect(cam, trt_yolo, conf_th, vis):
 
 
 def main():
+    print(f"{datetime.datetime.now().isoformat()} start!", flush=True)
     args = parse_args()
     if args.category_num <= 0:
         raise SystemExit('ERROR: bad category_num (%d)!' % args.category_num)
