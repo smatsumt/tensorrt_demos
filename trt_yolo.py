@@ -55,26 +55,27 @@ def loop_and_detect(cam, trt_yolo, conf_th, vis):
     fps = 0.0
     tic = time.time()
     while True:
-        if cv2.getWindowProperty(WINDOW_NAME, 0) < 0:
-            break
+        # if cv2.getWindowProperty(WINDOW_NAME, 0) < 0:
+        #     break
         img = cam.read()
         if img is None:
             break
         boxes, confs, clss = trt_yolo.detect(img, conf_th)
         img = vis.draw_bboxes(img, boxes, confs, clss)
         img = show_fps(img, fps)
-        cv2.imshow(WINDOW_NAME, img)
+        # cv2.imshow(WINDOW_NAME, img)
+        cv2.imwrite("output.jpg", img)
         toc = time.time()
         curr_fps = 1.0 / (toc - tic)
         # calculate an exponentially decaying average of fps number
         fps = curr_fps if fps == 0.0 else (fps*0.95 + curr_fps*0.05)
         tic = toc
-        key = cv2.waitKey(1)
-        if key == 27:  # ESC key: quit program
-            break
-        elif key == ord('F') or key == ord('f'):  # Toggle fullscreen
-            full_scrn = not full_scrn
-            set_display(WINDOW_NAME, full_scrn)
+        # key = cv2.waitKey(1)
+        # if key == 27:  # ESC key: quit program
+        #     break
+        # elif key == ord('F') or key == ord('f'):  # Toggle fullscreen
+        #     full_scrn = not full_scrn
+        #     set_display(WINDOW_NAME, full_scrn)
 
 
 def main():
@@ -102,14 +103,14 @@ def main():
 
     trt_yolo = TrtYOLO(args.model, (h, w), args.category_num)
 
-    open_window(
-        WINDOW_NAME, 'Camera TensorRT YOLO Demo',
-        cam.img_width, cam.img_height)
+    # open_window(
+    #     WINDOW_NAME, 'Camera TensorRT YOLO Demo',
+    #     cam.img_width, cam.img_height)
     vis = BBoxVisualization(cls_dict)
     loop_and_detect(cam, trt_yolo, conf_th=0.3, vis=vis)
 
     cam.release()
-    cv2.destroyAllWindows()
+    # cv2.destroyAllWindows()
 
 
 if __name__ == '__main__':
